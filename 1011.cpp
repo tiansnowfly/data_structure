@@ -1,28 +1,104 @@
 #include <iostream>
 using namespace std;
 
-int main(){
-    int data[12],lmb=0,d=0;
-    double save=0;
+class MyComplex{
+    friend istream &operator>>(istream &in,MyComplex &obj);
+    friend ostream &operator<<(ostream &out,const MyComplex &obj);
+    friend MyComplex operator+(const MyComplex &obj1,const MyComplex &obj2);
+    friend MyComplex operator-(const MyComplex &obj1,const MyComplex &obj2);
+    friend MyComplex operator*(const MyComplex &obj1,const MyComplex &obj2);
+    friend MyComplex operator/(const MyComplex &obj1,const MyComplex &obj2);
+    friend MyComplex operator+=(MyComplex &obj1,const MyComplex &obj2);
+    friend MyComplex operator-=(MyComplex &obj1,const MyComplex &obj2);
+    friend MyComplex operator*=(MyComplex &obj1,const MyComplex &obj2);
+    friend MyComplex operator/=(MyComplex &obj1,const MyComplex &obj2);
+    private:
+      double real;
+      double imag;
+    public:
+      MyComplex (double x=0,double y=0){
+          real=x;
+          imag=y;
+      }
 
-    for(int i=0;i<12;++i)cin>>data[i];
-    for(int j=0;j<12;++j){
-        if((lmb+300-data[j])<0){
-            cout<<"-"<<j+1;
-            ++d;
-            break;
-        }
-        else{
-            lmb=300+lmb-data[j];
-            if(lmb>=100){
-                save=save+(lmb/100)*100;
-                lmb=lmb-(lmb/100)*100;
-            }
-        }
-    }
-    if(d==0){
-        save=save+0.2*save+lmb;
-        cout<<save;
-    }
-    return 0;
+};
+istream &operator>>(istream &in,MyComplex &obj){
+    in>>obj.real>>obj.imag;
+    return in;
+}
+ostream &operator<<(ostream &out,const MyComplex &obj){
+    out<<obj.real<<" "<<obj.imag;
+    return out;
+}
+MyComplex operator+(const MyComplex &obj1,const MyComplex &obj2){
+    MyComplex tmp;
+
+    tmp.real=obj1.real+obj2.real;
+    tmp.imag=obj1.imag+obj2.imag;
+    return tmp;
+}
+MyComplex operator-(const MyComplex &obj1,const MyComplex &obj2){
+    MyComplex tmp;
+
+    tmp.real=obj1.real-obj2.real;
+    tmp.imag=obj1.imag-obj2.imag;
+    return tmp;
+}
+MyComplex operator*(const MyComplex &obj1,const MyComplex &obj2){
+    MyComplex tmp;
+
+    tmp.real=obj1.real*obj2.real-obj1.imag*obj2.imag;
+    tmp.imag=obj1.real*obj2.imag+obj1.imag*obj2.real;
+    return tmp;
+}
+MyComplex operator/(const MyComplex &obj1,const MyComplex &obj2){
+    MyComplex tmp;
+    double T=(obj2.real*obj2.real+obj2.imag*obj2.imag);
+
+    tmp.real=(obj1.real*obj2.real+obj1.imag*obj2.imag)/T;
+    tmp.imag=(obj2.real*obj1.imag-obj2.imag*obj1.real)/T;
+    return tmp;
+}
+MyComplex operator+=(MyComplex &obj1,const MyComplex &obj2){
+    obj1.real=obj1.real+obj2.real;
+    obj1.imag=obj1.imag+obj2.imag;
+    return obj1;
+}
+MyComplex operator*=(MyComplex &obj1,const MyComplex &obj2){
+    double ob1=obj1.real;
+    obj1.real=obj1.real*obj2.real-obj1.imag*obj2.imag;
+    obj1.imag=ob1*obj2.imag+obj1.imag*obj2.real;
+    return obj1;
+}
+MyComplex operator-=(MyComplex &obj1,const MyComplex &obj2){
+    obj1.real=obj1.real-obj2.real;
+    obj1.imag=obj1.imag-obj2.imag;
+    return obj1;
+}
+MyComplex operator/=(MyComplex &obj1,const MyComplex &obj2){
+    double ob2=obj1.real;
+    double T=(obj2.real*obj2.real+obj2.imag*obj2.imag);
+    obj1.real=(obj1.real*obj2.real+obj1.imag*obj2.imag)/T;
+    obj1.imag=(obj2.real*obj1.imag-obj2.imag*ob2)/T;
+    return obj1;
+}
+int main(){
+    MyComplex z1;
+    MyComplex z2;
+
+    cin>>z1>>z2;
+
+    cout.setf(ios::fixed);
+    cout.setf(ios::showpoint);
+    cout.precision(2);
+    cout<<z1+z2<<endl;
+    cout<<z1-z2<<endl;
+    cout<<z1*z2<<endl;
+    cout<<z1/z2<<endl;
+    cout<<(z1+=z2)<<endl;
+    cout<<(z1-=z2)<<endl;
+    cout<<(z1*=z2)<<endl;
+    cout<<(z1/=z2)<<endl;
+
+  return 0;
 }
